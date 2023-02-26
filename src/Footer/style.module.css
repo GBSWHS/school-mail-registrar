@@ -1,0 +1,9 @@
+.footer {
+  font-size: 9px;
+  text-align: center;
+}
+
+.footer > a {
+  color: inherit;
+  text-decoration: underline;
+}

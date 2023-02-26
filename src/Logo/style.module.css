@@ -1,0 +1,11 @@
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.logo > h1 {
+  font-family: Gloock;
+  color: #004E82;
+  font-size: 30px;
+}
