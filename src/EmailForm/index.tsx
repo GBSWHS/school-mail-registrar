@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react'
+import { type FC, useState, useEffect } from 'react'
 import { useSearchParam } from 'react-use'
 import jwtDecode from 'jwt-decode'
 
@@ -40,6 +40,13 @@ const EmailForm: FC = () => {
 
     setComplete(true)
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (complete) return
+      window.location.assign('/')
+    }, 60 * 1000)
+  }, [])
 
   return (
     <form
