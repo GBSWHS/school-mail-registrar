@@ -1,4 +1,4 @@
-import { jwtDecrypt, importSPKI } from 'jose'
+import { jwtVerify, importSPKI } from 'jose'
 
 interface RequestBody {
   email: string
@@ -17,7 +17,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   )
 
   const ecPublicKey = await importSPKI(pubkey, 'ES256')
-  const { payload } = await jwtDecrypt(idToken, ecPublicKey, {
+  const { payload } = await jwtVerify(idToken, ecPublicKey, {
     issuer: 'https://center.gbsw.hs.kr',
     audience: env.VITE_CLIENT_ID
   })
