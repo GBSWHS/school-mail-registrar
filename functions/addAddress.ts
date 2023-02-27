@@ -37,7 +37,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + env.API_KEY
     },
-    body: '{"email":"' + email + '"}'
+    body: JSON.stringify({ email })
   }
 
   const apiUrl =
