@@ -53,6 +53,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     success: true,
     needVerify:
       result?.status === 'unverified' || //
-      errors.find((v) => v.code === 2025) // Verification email has been sent too recently
+      errors.find((v) => v.code === 2025) !== undefined // Verification email has been sent too recently
   })
 }
