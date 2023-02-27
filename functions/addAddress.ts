@@ -7,6 +7,8 @@ interface RequestBody {
 
 interface Env {
   VITE_CLIENT_ID: string
+  API_KEY: string
+  ACCOUNT_ID: string
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -17,16 +19,40 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   )
 
   const ecPublicKey = await importSPKI(pubkey, 'ES256')
-  const { payload } = await jwtVerify(idToken, ecPublicKey, {
-    issuer: 'https://center.gbsw.hs.kr',
-    audience: env.VITE_CLIENT_ID
-  })
 
-  const { data } = payload as any
+  try {
+    await jwtVerify(idToken, ecPublicKey, {
+      issuer: 'https://center.gbsw.hs.kr',
+      audience: env.VITE_CLIENT_ID
+    })
+  } catch {
+    return Response.json({
+      success: false
+    })
+  }
 
-  console.log(data.login, email)
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + env.API_KEY
+    },
+    body: '{"email":"' + email + '"}'
+  }
+
+  const apiUrl =
+    'https://api.cloudflare.com/client/v4/accounts/' +
+    env.ACCOUNT_ID +
+    '/email/routing/addresses'
+
+  const { result, errors } = (await fetch(apiUrl, options).then(
+    async (res) => await res.json()
+  )) as any
 
   return Response.json({
-    ok: true
+    success: true,
+    needVerify:
+      result?.status === 'unverified' || //
+      errors.find((v) => v.code === 2025) // Verification email has been sent too recently
   })
 }
