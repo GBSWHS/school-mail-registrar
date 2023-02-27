@@ -1,4 +1,4 @@
-import { verify } from 'jsonwebtoken'
+import { jwtDecrypt, importSPKI } from 'jose'
 
 interface RequestBody {
   email: string
@@ -12,11 +12,13 @@ const publicKey = fetch('https://center.gbsw.hs.kr/publickey.pub').then(
 export const onRequestPost: PagesFunction = async ({ request }) => {
   const { email, idToken } = await request.json<RequestBody>()
 
-  const { data } = verify(idToken, await publicKey, {
-    algorithms: ['ES256'],
-    audience: process.env.VITE_CLIENT_ID,
-    issuer: 'https://center.gbsw.hs.kr'
-  }) as any
+  const ecPublicKey = await importSPKI(await publicKey, 'ES256')
+  const { payload } = await jwtDecrypt(idToken, ecPublicKey, {
+    issuer: 'https://center.gbsw.hs.kr',
+    audience: process.env.VITE_CLIENT_ID
+  })
+
+  const { data } = payload as any
 
   console.log(data.login, email)
 
