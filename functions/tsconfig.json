@@ -5,6 +5,6 @@
     "lib": ["esnext"],
     "strictNullChecks": true,
     "moduleResolution": "node",
-    "types": ["@cloudflare/workers-types", "node"]
+    "types": ["@cloudflare/workers-types"]
   }
 }
