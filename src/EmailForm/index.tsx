@@ -87,7 +87,7 @@ const EmailForm: FC = () => {
           </>
         )}
       </div>
-      {!complete && <button disabled={isLoading}>적용</button>}
+      {!complete && <button disabled={isLoading}>다음</button>}
     </form>
   )
 }
